@@ -18,7 +18,11 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 import "../styles/login.css";
 import { useForm } from "react-hook-form";
-
+import { useAddProductMutation } from "../redux";
+interface LoginFormData {
+  email: string;
+  password: string;
+}
 
 function LoginPage() {
   const [showPassword, setShowPassword] = React.useState(false);
@@ -30,7 +34,7 @@ function LoginPage() {
   ) => {
     event.preventDefault();
   };
-
+  const [addProduct, {  }] = useAddProductMutation();
   const {
     register,
     handleSubmit,
@@ -39,15 +43,29 @@ function LoginPage() {
     mode: "onChange",
   });
 
-  const onSubmit = () => {
-    console.log("Form submitted:");
+ const onSubmit = async (data: LoginFormData) => {
+  console.log('Form submitted:', data);
+
+  try {
+    await addProduct({
+      email: data.email,
+      password: data.password,
+    }).unwrap();
+
+    console.log('Успешная отправка данных');
+    } catch (error) {
+      console.error("Ошибка при отправке:", error);
+      
+    }
   };
 
+
+  
   return (
     <>
       <Container className="container" sx={{ padding: "0px 0px" }}>
         <CardMedia image={Logo} component="img" alt="Logo" className="logo" />
-        <Card sx={{ height: 401, width: 514 }}>
+        <Card sx={{ width: 514 }}>
           <CardContent
             className="card_content"
             onSubmit={handleSubmit(onSubmit)}
@@ -93,7 +111,7 @@ function LoginPage() {
               sx={{ marginBottom: "24px" }}
             />
             <Button variant="contained">Войти</Button>
-            <Button variant="text">Забыли пароль?</Button>
+            <Button variant="text" >Забыли пароль?</Button>
           </CardContent>
         </Card>
       </Container>
