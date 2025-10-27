@@ -34,33 +34,29 @@ function LoginPage() {
   ) => {
     event.preventDefault();
   };
-  const [addProduct, {  }] = useAddProductMutation();
+  const [addProduct, {}] = useAddProductMutation();
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({
+  } = useForm<LoginFormData>({
     mode: "onChange",
   });
+  const onSubmit = async (data: LoginFormData) => {
+    console.log("Form submitted:", data);
 
- const onSubmit = async (data: LoginFormData) => {
-  console.log('Form submitted:', data);
+    try {
+      await addProduct({
+        email: data.email,
+        password: data.password,
+      }).unwrap();
 
-  try {
-    await addProduct({
-      email: data.email,
-      password: data.password,
-    }).unwrap();
-
-    console.log('Успешная отправка данных');
+      console.log("Успешная отправка данных");
     } catch (error) {
       console.error("Ошибка при отправке:", error);
-      
     }
   };
 
-
-  
   return (
     <>
       <Container className="container" sx={{ padding: "0px 0px" }}>
@@ -74,7 +70,8 @@ function LoginPage() {
             <InputLabel className="input_label">E-mail</InputLabel>
             <TextField
               type="email"
-              label="Введите свой e-mail"
+              // label="Введите свой e-mail"
+              placeholder="Введите свой e-mail"
               {...register("email", {
                 required: "Email обязателен",
                 pattern: {
@@ -87,31 +84,32 @@ function LoginPage() {
             ></TextField>
             <InputLabel className="input_label">Пароль</InputLabel>
             <TextField
-      label="Введите пароль"
-      type={showPassword ? 'text' : 'password'}
-      InputProps={{
-        endAdornment: (
-          <InputAdornment position="end">
-            <IconButton
-              aria-label="переключить видимость пароля"
-              onClick={handleClickShowPassword}
-              onMouseDown={handleMouseDownPassword}
-              edge="end"
-            >
-              {showPassword ? <VisibilityOff /> : <Visibility />}
-            </IconButton>
-          </InputAdornment>
-        ),
-      }}
-      variant="outlined"
-    />
+              // label="Введите пароль"
+              placeholder="Введите пароль"
+              type={showPassword ? "text" : "password"}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="переключить видимость пароля"
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                      edge="end"
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+              variant="outlined"
+            />
             <FormControlLabel
               control={<Checkbox />}
               label="Запомнить меня"
               sx={{ marginBottom: "24px" }}
             />
             <Button variant="contained">Войти</Button>
-            <Button variant="text" >Забыли пароль?</Button>
+            <Button variant="text">Забыли пароль?</Button>
           </CardContent>
         </Card>
       </Container>
