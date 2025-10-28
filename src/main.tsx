@@ -3,7 +3,8 @@ import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import { ThemeProvider, createTheme } from "@mui/material";
 import { Provider } from "react-redux";
-import { store } from './redux'
+import { store } from "./redux";
+import { BrowserRouter } from "react-router-dom";
 
 const theme = createTheme({
   palette: {
@@ -51,6 +52,13 @@ const theme = createTheme({
             height: 40,
             width: 466,
             borderRadius: 8,
+          },
+        },
+        input: {
+          '&::placeholder': {
+            fontSize: "14px",
+            fontFamily: "Inter",
+            color: "#737680",
           },
         },
       },
@@ -114,9 +122,11 @@ const theme = createTheme({
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <ThemeProvider theme={theme}>
-      <Provider store={store}>
-        <App />
-      </Provider>
+      <BrowserRouter>
+        <Provider store={store}>
+          <App />
+        </Provider>
+      </BrowserRouter>
     </ThemeProvider>
   </StrictMode>
 );
